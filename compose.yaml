@@ -1,0 +1,18 @@
+services:
+  tunnel:
+    image: cloudflare/cloudflared
+    restart: unless-stopped
+    command:
+      - tunnel
+      - --no-autoupdate
+      - run
+    environment:
+      - TUNNEL_TOKEN=eyJhIjoiYzc5ZDU1ZDM4OTI2NTc5Nzk2YjFlODhkMmYxMTk5ZWYiLCJ0IjoiYjZhMmIwNmItZDNiNS00ZmMxLTk3ZTYtNjJhOGE3NTI0MzFkIiwicyI6Ik5EQmlORGswWkRFdE5qVmtOeTAwTmpRMUxUZzVPV010WlRreVpEQTRZVE5tT1RkbSJ9
+
+  proxy:
+    build:
+      context: ./nginx
+    ports:
+      - 443:443
+    restart: unless-stopped
+
