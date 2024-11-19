@@ -7,12 +7,30 @@ services:
       - --no-autoupdate
       - run
     environment:
-      - TUNNEL_TOKEN=eyJhIjoiYzc5ZDU1ZDM4OTI2NTc5Nzk2YjFlODhkMmYxMTk5ZWYiLCJ0IjoiYjZhMmIwNmItZDNiNS00ZmMxLTk3ZTYtNjJhOGE3NTI0MzFkIiwicyI6Ik5EQmlORGswWkRFdE5qVmtOeTAwTmpRMUxUZzVPV010WlRreVpEQTRZVE5tT1RkbSJ9
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    networks:
+      default:
+        ipv4_address: ${TUNNEL_IP_ADDRESS}
 
   proxy:
-    build:
-      context: ./nginx
-    ports:
-      - 443:443
+    image: nginx:1.26.2
     restart: unless-stopped
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/templates/nginx.conf.template
+    environment:
+      - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx
+      - PROXY_IP_ADDRESS=${PROXY_IP_ADDRESS}
+      - RESOLVER_IP_ADDRESS=${RESOLVER_IP_ADDRESS}
+    ports:
+      - "443:443"
+    networks:
+      default:
+        ipv4_address: ${PROXY_IP_ADDRESS}
 
+networks:
+  default:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: ${NETWORK_SUBNET}
