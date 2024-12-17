@@ -22,6 +22,7 @@ services:
       - PROXY_IP_ADDRESS=${PROXY_IP_ADDRESS}
       - RESOLVER_IP_ADDRESS=${RESOLVER_IP_ADDRESS}
     ports:
+      - "80:80"
       - "443:443"
     networks:
       default:
